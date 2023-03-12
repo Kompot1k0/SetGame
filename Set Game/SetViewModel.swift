@@ -12,7 +12,7 @@ class Set: ObservableObject {
     
     @Published private var model = SetGame()
     
-    var cards: Array<Card> {
+    var cards: [Card] {
         model.cards
     }
     

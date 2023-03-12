@@ -9,7 +9,7 @@ import Foundation
 
 struct SetGame {
     
-    struct Card {
+    struct Card: Identifiable {
         var isPressed = false
         var isSet = false
         let content: CardContent
@@ -37,7 +37,6 @@ struct SetGame {
             }
         }
 //        cards = cards.shuffled()
-        print("\(cards)")
     }
     
     func choose(_ card: Card) {
@@ -56,4 +55,5 @@ struct SetGame {
         case second = 1
         case third  = 2
     }
+    let test = CustomType.first
 }

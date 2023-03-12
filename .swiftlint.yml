@@ -3,6 +3,7 @@ disabled_rules:
   - comma
   - control_statement
   - trailing_whitespace
+  - vertical_whitespace
 opt_in_rules:
   - empty_count
   - missing_docs
