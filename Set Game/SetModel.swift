@@ -17,6 +17,7 @@ struct SetGame {
     }
     
     private(set) var cards: [Card]
+    private(set) var cardsToDisplay: [Card] = []
     
     init() {
         cards = []
@@ -36,11 +37,36 @@ struct SetGame {
                 }
             }
         }
-//        cards = cards.shuffled()
+        cards = cards.shuffled()
+        fillArray(with: cards)
     }
     
     func choose(_ card: Card) {
         
+    }
+    
+    private mutating func fillArray(with cards: [Card]) {
+        var counter = 0
+        if cards.count >= 12 {
+            while cardsToDisplay.count < 12 {
+                cardsToDisplay.append(cards[counter])
+                counter += 1
+            }
+        }
+    }
+    
+    mutating func addThreeCards() {
+        let numberOfCards = cardsToDisplay.count
+        var index = 0
+        
+        if cardsToDisplay.count < 21 {
+            while cardsToDisplay.count != numberOfCards + 3 {
+                if !cardsToDisplay.contains(where: { $0.id == cards[index].id}) {
+                    cardsToDisplay.append(cards[index])
+                }
+                index += 1
+            }
+        }
     }
     
     struct CardContent {

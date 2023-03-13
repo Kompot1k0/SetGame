@@ -16,11 +16,19 @@ class Set: ObservableObject {
         model.cards
     }
     
+    var cardsToDisplay: [Card] {
+        model.cardsToDisplay
+    }
+    
     func newGame() {
         model = SetGame()
     }
     
     func choose(_ card: Card) {
         model.choose(card)
+    }
+    
+    func addThreeCards() {
+        model.addThreeCards()
     }
 }

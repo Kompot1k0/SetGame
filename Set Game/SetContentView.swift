@@ -13,14 +13,22 @@ struct SetContentView: View {
     
     var body: some View {
         VStack {
-            AspectVGrid(items: game.cards, aspectRatio: 2/3) { card in
+            AspectVGrid(items: game.cardsToDisplay, aspectRatio: 2/3) { card in
                 CardView(card: card)
                     .padding(3)
             }
+            HStack {
                 Button(action: game.newGame) {
                     Text("New Game")
                         .font(.title)
                         .foregroundColor(.blue)
+                }.padding()
+                Spacer()
+                Button(action: game.addThreeCards) {
+                    Text("Add 3 Cards")
+                        .font(.title)
+                        .foregroundColor(.blue)
+                }.padding()
             }
         }
     }
