@@ -16,6 +16,9 @@ struct SetContentView: View {
             AspectVGrid(items: game.cardsToDisplay, aspectRatio: 2/3) { card in
                 CardView(card: card)
                     .padding(3)
+                    .onTapGesture {
+                        game.choose(card)
+                    }
             }
             HStack {
                 Button(action: game.newGame) {
@@ -34,17 +37,23 @@ struct SetContentView: View {
     }
     
     struct CardView: View {
-        let card: SetGame.Card
+        var card: SetGame.Card
         var body: some View {
             GeometryReader { proxy in
                 let size = proxy.size
-                        ZStack {
-                            let number = defineNumber(card.content.number)
-                            let shape = defineShape(card.content.shape, defineShading(card.content.shading))
-                            let colorOfCard = defineColor(card.content.color)
-                            let cardForm = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadiusForCard)
+                    ZStack {
+                        let number = defineNumber(card.content.number)
+                        let shape = defineShape(card.content.shape, defineShading(card.content.shading))
+                        let colorOfCard = defineColor(card.content.color)
+                        let cardForm = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadiusForCard)
+                        if card.isPressed {
+                                cardForm.fill().foregroundColor(.black)
+                                cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
+                                    .foregroundColor(.yellow)
+                        } else {
                             cardForm.fill().foregroundColor(.black)
                             cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
+                        }
                     VStack {
                         ForEach(0..<number, id: \.self) {_ in
                                 shape

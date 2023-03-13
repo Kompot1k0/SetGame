@@ -41,7 +41,10 @@ struct SetGame {
         fillArray(with: cards)
     }
     
-    func choose(_ card: Card) {
+    mutating func choose(_ card: Card) {
+        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id}) {
+            cardsToDisplay[chosenIndex].isPressed.toggle()
+        }
         
     }
     
