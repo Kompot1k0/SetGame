@@ -20,6 +20,8 @@ struct SetContentView: View {
                         game.choose(card)
                     }
             }
+            Text("\(game.cardsToDisplay.count)")
+            Text("\(game.cards.count)")
             HStack {
                 Button(action: game.newGame) {
                     Text("New Game")
@@ -49,7 +51,7 @@ struct SetContentView: View {
                         if card.isPressed {
                                 cardForm.fill().foregroundColor(.black)
                                 cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                                    .foregroundColor(.yellow)
+                                    .foregroundColor(defineBorderColor(card))
                         } else {
                             cardForm.fill().foregroundColor(.black)
                             cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
@@ -58,8 +60,7 @@ struct SetContentView: View {
                         ForEach(0..<number, id: \.self) {_ in
                                 shape
                                     .foregroundColor(colorOfCard)
-//                                    .frame(width: 260, height: 140)
-                                    .frame(width: size.width * 0.6, height: size.height * 0.2)
+                                    .frame(width: size.width * DrawingConstants.frameWidth, height: size.height * DrawingConstants.frameHeight)
                         }
                     }
                 }
@@ -113,13 +114,21 @@ private func defineShading(_ card: SetGame.CustomType) -> CGFloat {
     }
 }
 
+private func defineBorderColor(_ card: SetGame.Card) -> Color {
+    if card.isSetCorrect {
+        return .green
+    } else if card.isSetWrong {
+        return .red
+    }
+    return .yellow
+}
+
 private struct DrawingConstants {
-    static let cornerRadiusForCard: CGFloat = 12 // used
+    static let cornerRadiusForCard: CGFloat = 12 
     static let cornerRadiusForShape: CGFloat = 50
     static let lineWidth: CGFloat = 3
-    static let fontScale: CGFloat = 0.55
-    static let circlePadding: CGFloat = 6
-    static let circleOpacity: CGFloat = 0.4
+    static let frameWidth: CGFloat = 0.6
+    static let frameHeight: CGFloat = 0.2
 }
 
 

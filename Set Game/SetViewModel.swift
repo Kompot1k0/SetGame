@@ -25,7 +25,7 @@ class Set: ObservableObject {
     }
     
     func choose(_ card: Card) {
-        model.choose(card)
+        model.chooseACard(card)
     }
     
     func addThreeCards() {
