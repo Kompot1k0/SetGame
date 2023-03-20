@@ -33,7 +33,9 @@ struct SetContentView: View {
                     Text("Add 3 Cards")
                         .font(.title)
                         .foregroundColor(.blue)
-                }.padding()
+                }
+                .padding()
+    //                .disabled(game.cards.isEmpty)
             }
         }
     }
@@ -60,7 +62,8 @@ struct SetContentView: View {
                         ForEach(0..<number, id: \.self) {_ in
                                 shape
                                     .foregroundColor(colorOfCard)
-                                    .frame(width: size.width * DrawingConstants.frameWidth, height: size.height * DrawingConstants.frameHeight)
+                                    .frame(width: size.width * DrawingConstants.frameWidth,
+                                           height: size.height * DrawingConstants.frameHeight)
                         }
                     }
                 }

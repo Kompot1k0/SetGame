@@ -43,7 +43,7 @@ struct SetGame {
             }
         }
         cards = cards.shuffled()
-        // filled array with cards to display
+        // filled array of cards to display
         fillArray(with: cards)
     }
     
@@ -54,13 +54,8 @@ struct SetGame {
         }
         
         // If allready exist 3 sets of matching or nonMatching do what rules tell to do
-        if counterOfMatchingSets == 3 {
-            replaceMatchingSets()
-        }
-        print(cardsToDisplay)
-        guard counterOfNonMatchingSets != 3 else {
-            return
-        }
+        replaceMatchingSets()
+        deselectNonMatchingSets()
         
         if !card.isSetCorrect && !card.isSetWrong {
             cardsToDisplay[chosenIndex].isPressed.toggle()
@@ -74,8 +69,7 @@ struct SetGame {
         var counter = 0
         if cards.count >= 12 {
             while cardsToDisplay.count < 12 {
-                cardsToDisplay.append(cards[counter])
-                self.cards.removeAll(where: { $0.id == cardsToDisplay[counter].id })
+                cardsToDisplay.insert(self.cards.removeFirst(), at: counter)
                 counter += 1
             }
         }
@@ -84,28 +78,30 @@ struct SetGame {
     mutating func addThreeCards() {
         guard !cards.isEmpty else { return }
         let numberOfCards = cardsToDisplay.count
-        var index = 0
+        
+        if counterOfMatchingSets > 0 {
+            guard let indexes = getIndexOfFirstThreeSettedCards() else { return }
+            for coun in 0..<3 {
+                cardsToDisplay.remove(at: indexes[coun])
+                cardsToDisplay.insert(self.cards.removeFirst(), at: indexes[coun])
+            }
+            counterOfMatchingSets -= 1
+            return
+        }
         
         if cardsToDisplay.count < 19 {
             while cardsToDisplay.count != numberOfCards + 3 {
-                if !cardsToDisplay.contains(where: { $0.id == cards[index].id}) {
-                    cardsToDisplay.append(cards[index])
-                    cards.removeAll(where: { $0.id == cardsToDisplay.last?.id })
-                }
-                index += 1
+                cardsToDisplay.append(cards.removeFirst())
             }
         }
     }
     
     private mutating func checkIfSetMatchedOrNonMatched() {
-        guard let indexOne = cardsToDisplay.firstIndex(where: {$0.isPressed && !$0.isSetWrong && !$0.isSetCorrect}) else { return }
-        guard let indexTwo = cardsToDisplay.firstIndex(where: {$0.isPressed && !$0.isSetWrong && !$0.isSetCorrect && $0.id != cardsToDisplay[indexOne].id}) else { return }
-        guard let indexThree = cardsToDisplay.firstIndex(where: {$0.isPressed &&
-            !$0.isSetWrong &&
-            !$0.isSetCorrect &&
-            $0.id != cardsToDisplay[indexOne].id &&
-            $0.id != cardsToDisplay[indexTwo].id})
+        guard let index = getIndexOfFirstThreePressedNonSettedCard()
         else { return }
+        let indexOne = index[0]
+        let indexTwo = index[1]
+        let indexThree = index[2]
         
         var counterOfPressedCards: Int = 0
         for card in cardsToDisplay where card.isPressed &&
@@ -115,106 +111,150 @@ struct SetGame {
         guard counterOfPressedCards == 3 else {
             return
         }
-        
-        
-        
-        //        все карты имеют то же количество символов или же 3 различных значения;
-//        guard cardsToDisplay[indexOne].content.number ==
-//                cardsToDisplay[indexTwo].content.number &&
-//                cardsToDisplay[indexOne].content.number ==
-//            cardsToDisplay[indexThree].content.number ||
-//                cardsToDisplay[indexOne].content.number !=
-//                cardsToDisplay[indexTwo].content.number &&
-//                cardsToDisplay[indexOne].content.number !=
-//                cardsToDisplay[indexThree].content.number &&
-//                cardsToDisplay[indexTwo].content.number !=
-//                cardsToDisplay[indexThree].content.number
-//        else {
-//            cardsToDisplay[indexOne].isSetWrong = true
-//            cardsToDisplay[indexTwo].isSetWrong = true
-//            cardsToDisplay[indexThree].isSetWrong = true
-//            counterOfNonMatchingSets += 1
-//            return
-//        }
-//        //        все карты имеют тот же символ или же 3 различных символа;
-//        guard cardsToDisplay[indexOne].content.shape ==
-//                cardsToDisplay[indexTwo].content.shape &&
-//                cardsToDisplay[indexOne].content.shape ==
-//            cardsToDisplay[indexThree].content.shape ||
-//                cardsToDisplay[indexOne].content.shape !=
-//                cardsToDisplay[indexTwo].content.shape &&
-//                cardsToDisplay[indexOne].content.shape !=
-//                cardsToDisplay[indexThree].content.shape &&
-//                cardsToDisplay[indexTwo].content.shape !=
-//                cardsToDisplay[indexThree].content.shape
-//        else {
-//            cardsToDisplay[indexOne].isSetWrong = true
-//            cardsToDisplay[indexTwo].isSetWrong = true
-//            cardsToDisplay[indexThree].isSetWrong = true
-//            counterOfNonMatchingSets += 1
-//            return
-//        }
-//        //        все карты имеют ту же текстуру или же 3 различных варианта текстуры;
-//        guard cardsToDisplay[indexOne].content.shading ==
-//                cardsToDisplay[indexTwo].content.shading &&
-//                cardsToDisplay[indexOne].content.shading ==
-//            cardsToDisplay[indexThree].content.shading ||
-//                cardsToDisplay[indexOne].content.shading !=
-//                cardsToDisplay[indexTwo].content.shading &&
-//                cardsToDisplay[indexOne].content.shading !=
-//                cardsToDisplay[indexThree].content.shading &&
-//                cardsToDisplay[indexTwo].content.shading !=
-//                cardsToDisplay[indexThree].content.shading
-//        else {
-//            cardsToDisplay[indexOne].isSetWrong = true
-//            cardsToDisplay[indexTwo].isSetWrong = true
-//            cardsToDisplay[indexThree].isSetWrong = true
-//            counterOfNonMatchingSets += 1
-//            return
-//        }
-//        //        все карты имеют тот же цвет или же 3 различных цвета
-//        guard cardsToDisplay[indexOne].content.color ==
-//                cardsToDisplay[indexTwo].content.color &&
-//                cardsToDisplay[indexOne].content.color ==
-//            cardsToDisplay[indexThree].content.color ||
-//                cardsToDisplay[indexOne].content.color !=
-//                cardsToDisplay[indexTwo].content.color &&
-//                cardsToDisplay[indexOne].content.color !=
-//                cardsToDisplay[indexThree].content.color &&
-//                cardsToDisplay[indexTwo].content.color !=
-//                cardsToDisplay[indexThree].content.color
-//        else {
-//            cardsToDisplay[indexOne].isSetWrong = true
-//            cardsToDisplay[indexTwo].isSetWrong = true
-//            cardsToDisplay[indexThree].isSetWrong = true
-//            counterOfNonMatchingSets += 1
-//            return
-//        }
+
+        guard cardsToDisplay[indexOne].content.number ==
+                cardsToDisplay[indexTwo].content.number &&
+                cardsToDisplay[indexOne].content.number ==
+            cardsToDisplay[indexThree].content.number ||
+                cardsToDisplay[indexOne].content.number !=
+                cardsToDisplay[indexTwo].content.number &&
+                cardsToDisplay[indexOne].content.number !=
+                cardsToDisplay[indexThree].content.number &&
+                cardsToDisplay[indexTwo].content.number !=
+                cardsToDisplay[indexThree].content.number
+        else {
+            cardsToDisplay[indexOne].isSetWrong = true
+            cardsToDisplay[indexTwo].isSetWrong = true
+            cardsToDisplay[indexThree].isSetWrong = true
+            counterOfNonMatchingSets += 1
+            return
+        }
+
+        guard cardsToDisplay[indexOne].content.shape ==
+                cardsToDisplay[indexTwo].content.shape &&
+                cardsToDisplay[indexOne].content.shape ==
+            cardsToDisplay[indexThree].content.shape ||
+                cardsToDisplay[indexOne].content.shape !=
+                cardsToDisplay[indexTwo].content.shape &&
+                cardsToDisplay[indexOne].content.shape !=
+                cardsToDisplay[indexThree].content.shape &&
+                cardsToDisplay[indexTwo].content.shape !=
+                cardsToDisplay[indexThree].content.shape
+        else {
+            cardsToDisplay[indexOne].isSetWrong = true
+            cardsToDisplay[indexTwo].isSetWrong = true
+            cardsToDisplay[indexThree].isSetWrong = true
+            counterOfNonMatchingSets += 1
+            return
+        }
+
+        guard cardsToDisplay[indexOne].content.shading ==
+                cardsToDisplay[indexTwo].content.shading &&
+                cardsToDisplay[indexOne].content.shading ==
+            cardsToDisplay[indexThree].content.shading ||
+                cardsToDisplay[indexOne].content.shading !=
+                cardsToDisplay[indexTwo].content.shading &&
+                cardsToDisplay[indexOne].content.shading !=
+                cardsToDisplay[indexThree].content.shading &&
+                cardsToDisplay[indexTwo].content.shading !=
+                cardsToDisplay[indexThree].content.shading
+        else {
+            cardsToDisplay[indexOne].isSetWrong = true
+            cardsToDisplay[indexTwo].isSetWrong = true
+            cardsToDisplay[indexThree].isSetWrong = true
+            counterOfNonMatchingSets += 1
+            return
+        }
+
+        guard cardsToDisplay[indexOne].content.color ==
+                cardsToDisplay[indexTwo].content.color &&
+                cardsToDisplay[indexOne].content.color ==
+            cardsToDisplay[indexThree].content.color ||
+                cardsToDisplay[indexOne].content.color !=
+                cardsToDisplay[indexTwo].content.color &&
+                cardsToDisplay[indexOne].content.color !=
+                cardsToDisplay[indexThree].content.color &&
+                cardsToDisplay[indexTwo].content.color !=
+                cardsToDisplay[indexThree].content.color
+        else {
+            cardsToDisplay[indexOne].isSetWrong = true
+            cardsToDisplay[indexTwo].isSetWrong = true
+            cardsToDisplay[indexThree].isSetWrong = true
+            counterOfNonMatchingSets += 1
+            return
+        }
         cardsToDisplay[indexOne].isSetCorrect = true
         cardsToDisplay[indexTwo].isSetCorrect = true
         cardsToDisplay[indexThree].isSetCorrect = true
         counterOfMatchingSets += 1
-        print(counterOfMatchingSets)
-        //        все карты имеют то же количество символов или же 3 различных значения;
-        //        все карты имеют тот же символ или же 3 различных символа;
-        //        все карты имеют ту же текстуру или же 3 различных варианта текстуры;
-        //        все карты имеют тот же цвет или же 3 различных цвета
     }
     
     private mutating func replaceMatchingSets() {
+        guard counterOfMatchingSets == 3 else { return }
         for card in cardsToDisplay where card.isSetCorrect {
             guard let cardIndex = cardsToDisplay.firstIndex(where: { $0.id == card.id })
             else { return }
             
             cardsToDisplay.removeAll(where: { $0.id == card.id })
             
-            guard cards.isEmpty else {
+            guard cards.isEmpty || cardsToDisplay.count > 11 else {
                 cardsToDisplay.insert(cards.removeFirst(), at: cardIndex)
                 continue
             }
         }
         counterOfMatchingSets = 0
     }
+    
+    private mutating func deselectNonMatchingSets() {
+        guard counterOfNonMatchingSets == 3 else { return }
+        for index in 0..<cardsToDisplay.count where cardsToDisplay[index].isSetWrong {
+                cardsToDisplay[index].isSetWrong.toggle()
+                cardsToDisplay[index].isPressed.toggle()
+        }
+        counterOfNonMatchingSets = 0
+    }
+    
+    private func getIndexOfFirstThreeSettedCards() -> [Int]? {
+        var index = [0, 0, 0]
+        
+        guard let indexOne = cardsToDisplay.firstIndex(where: { $0.isSetCorrect })
+        else { return nil }
+        guard let indexTwo = cardsToDisplay.firstIndex(where: { $0.isSetCorrect &&
+            $0.id != cardsToDisplay[indexOne].id})
+        else { return nil}
+        guard let indexThree = cardsToDisplay.firstIndex(where: { $0.isSetCorrect &&
+            $0.id != cardsToDisplay[indexOne].id &&
+            $0.id != cardsToDisplay[indexTwo].id})
+        else { return nil}
+        
+        index[0] = indexOne
+        index[1] = indexTwo
+        index[2] = indexThree
+        
+        return index
+    }
+    
+    private func getIndexOfFirstThreePressedNonSettedCard() -> [Int]? {
+        guard let indexOne = cardsToDisplay.firstIndex(where: {$0.isPressed &&
+            !$0.isSetWrong &&
+            !$0.isSetCorrect})
+        else { return nil}
+        guard let indexTwo = cardsToDisplay.firstIndex(where: {$0.isPressed &&
+            !$0.isSetWrong &&
+            !$0.isSetCorrect &&
+            $0.id != cardsToDisplay[indexOne].id})
+        else { return nil}
+        guard let indexThree = cardsToDisplay.firstIndex(where: {$0.isPressed &&
+            !$0.isSetWrong &&
+            !$0.isSetCorrect &&
+            $0.id != cardsToDisplay[indexOne].id &&
+            $0.id != cardsToDisplay[indexTwo].id})
+        else { return nil}
+        
+        let index = [indexOne, indexTwo, indexThree]
+        return index
+    }
+    
     struct CardContent {
         let color: CustomType
         let shape: CustomType
@@ -227,5 +267,4 @@ struct SetGame {
         case second = 1
         case third  = 2
     }
-    let test = CustomType.first
 }
