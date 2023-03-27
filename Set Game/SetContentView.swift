@@ -16,12 +16,11 @@ struct SetContentView: View {
             AspectVGrid(items: game.cardsToDisplay, aspectRatio: 2/3) { card in
                 CardView(card: card)
                     .padding(3)
+                    .transition(AnyTransition.opacity)
                     .onTapGesture {
-                        game.choose(card)
-                    }
+                    game.choose(card)
+                }
             }
-            Text("\(game.cardsToDisplay.count)")
-            Text("\(game.cards.count)")
             HStack {
                 Button(action: game.newGame) {
                     Text("New Game")
@@ -29,13 +28,28 @@ struct SetContentView: View {
                         .foregroundColor(.blue)
                 }.padding()
                 Spacer()
-                Button(action: game.addThreeCards) {
-                    Text("Add 3 Cards")
-                        .font(.title)
-                        .foregroundColor(.blue)
-                }
+                addCards
+                    .font(.title)
+                    .foregroundColor(.blue)
                 .padding()
-    //                .disabled(game.cards.isEmpty)
+            }
+        }
+    }
+    
+    var addCards: some View {
+//        withAnimation {
+//            Button(action: game.addThreeCards) {
+//                Text("Add 3 Cards")
+//                    .font(.title)
+//                    .foregroundColor(.blue)
+//            }
+//        }
+        
+        
+            
+        Button("Add 3 Cards") {
+            withAnimation {
+                game.addThreeCards()
             }
         }
     }
@@ -45,31 +59,22 @@ struct SetContentView: View {
         var body: some View {
             GeometryReader { proxy in
                 let size = proxy.size
-                    ZStack {
-                        let number = defineNumber(card.content.number)
-                        let shape = defineShape(card.content.shape, defineShading(card.content.shading))
-                        let colorOfCard = defineColor(card.content.color)
-                        let cardForm = RoundedRectangle(cornerRadius: DrawingConstants.cornerRadiusForCard)
-                        if card.isPressed {
-                                cardForm.fill().foregroundColor(.black)
-                                cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                                    .foregroundColor(defineBorderColor(card))
-                        } else {
-                            cardForm.fill().foregroundColor(.black)
-                            cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                        }
-                    VStack {
-                        ForEach(0..<number, id: \.self) {_ in
-                                shape
-                                    .foregroundColor(colorOfCard)
-                                    .frame(width: size.width * DrawingConstants.frameWidth,
-                                           height: size.height * DrawingConstants.frameHeight)
-                        }
+                let number = defineNumber(card.content.number)
+                let shape = defineShape(card.content.shape, defineShading(card.content.shading))
+                let colorOfCard = defineColor(card.content.color)
+                VStack {
+                    ForEach(0..<number, id: \.self) {_ in
+                            shape
+                                .foregroundColor(colorOfCard)
+                                .frame(width: size.width * DrawingConstants.frameWidth,
+                                       height: size.height * DrawingConstants.frameHeight)
+                                .rotation3DEffect(Angle.degrees(card.isSetCorrect ? 180 : 0), axis: (0, 1, 0))
+                                    .animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false))
                     }
-                }
+                }.cardify(isPressed: card.isPressed, borderColor: defineBorderColor(card))
             }
         }
-    } 
+    }
 }
 
 private func defineNumber(_ card: SetGame.CustomType) -> Int {

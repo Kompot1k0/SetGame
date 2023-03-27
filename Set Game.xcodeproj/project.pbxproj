@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8401F57F29BD711D00D53E8D /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8401F57E29BD711D00D53E8D /* AspectVGrid.swift */; };
 		840C83F629B931A40052ADEE /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840C83F529B931A40052ADEE /* Diamond.swift */; };
+		845B6ACF29D1E76C008A9272 /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845B6ACE29D1E76C008A9272 /* Cardify.swift */; };
 		848575AE29B6E38200D3B3A3 /* Set_GameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848575AD29B6E38200D3B3A3 /* Set_GameApp.swift */; };
 		848575B029B6E38200D3B3A3 /* SetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848575AF29B6E38200D3B3A3 /* SetContentView.swift */; };
 		848575B229B6E38300D3B3A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 848575B129B6E38300D3B3A3 /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		8401F57E29BD711D00D53E8D /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 		840C83F529B931A40052ADEE /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
+		845B6ACE29D1E76C008A9272 /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
 		848575AA29B6E38200D3B3A3 /* Set Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Set Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		848575AD29B6E38200D3B3A3 /* Set_GameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Set_GameApp.swift; sourceTree = "<group>"; };
 		848575AF29B6E38200D3B3A3 /* SetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetContentView.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				848575AF29B6E38200D3B3A3 /* SetContentView.swift */,
 				84B8DB6F29B82C81008A7BDB /* SetViewModel.swift */,
 				848575BC29B6E62700D3B3A3 /* SetModel.swift */,
+				845B6ACE29D1E76C008A9272 /* Cardify.swift */,
 				848575B129B6E38300D3B3A3 /* Assets.xcassets */,
 				848575B329B6E38300D3B3A3 /* Preview Content */,
 			);
@@ -171,6 +174,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				848575B029B6E38200D3B3A3 /* SetContentView.swift in Sources */,
+				845B6ACF29D1E76C008A9272 /* Cardify.swift in Sources */,
 				84B8DB7029B82C81008A7BDB /* SetViewModel.swift in Sources */,
 				8401F57F29BD711D00D53E8D /* AspectVGrid.swift in Sources */,
 				840C83F629B931A40052ADEE /* Diamond.swift in Sources */,

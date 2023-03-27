@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct SetGame {
     
@@ -44,7 +45,9 @@ struct SetGame {
         }
         cards = cards.shuffled()
         // filled array of cards to display
-        fillArray(with: cards)
+        withAnimation(.easeOut) {
+            fillArray(with: cards)
+        }
     }
     
     mutating func chooseACard(_ card: Card) {
