@@ -14,19 +14,20 @@ struct SetGame {
         var isPressed = false
         var isSetCorrect = false
         var isSetWrong = false
+        var isUndealed = false
         let content: CardContent
         let id: Int
     }
-    
-    private(set) var cards: [Card]
+
+    private(set) var cards: [Card] = []
     private(set) var cardsToDisplay: [Card] = []
+    private(set) var discardCards: [Card] = []
     
     private var counterOfMatchingSets: Int = 0
     private var counterOfNonMatchingSets: Int = 0
     private var counterOfPressedCards: Int = 0
     
     init() {
-        cards = []
         var index = 0
         
         for color in 0..<3 {
@@ -44,10 +45,6 @@ struct SetGame {
             }
         }
         cards = cards.shuffled()
-        // filled array of cards to display
-        withAnimation(.easeOut) {
-            fillArray(with: cards)
-        }
     }
     
     mutating func chooseACard(_ card: Card) {
@@ -68,25 +65,30 @@ struct SetGame {
         checkIfSetMatchedOrNonMatched()
     }
     
-    private mutating func fillArray(with cards: [Card]) {
-        var counter = 0
-        if cards.count >= 12 {
-            while cardsToDisplay.count < 12 {
-                cardsToDisplay.insert(self.cards.removeFirst(), at: counter)
-                counter += 1
-            }
-        }
+    mutating func fillArray() {
+        var tmp: Card
+        tmp = self.cards.removeFirst()
+        tmp.isUndealed.toggle()
+        cardsToDisplay.append(tmp)
     }
     
     mutating func addThreeCards() {
         guard !cards.isEmpty else { return }
         let numberOfCards = cardsToDisplay.count
+        var tmp: Card
         
         if counterOfMatchingSets > 0 {
             guard let indexes = getIndexOfFirstThreeSettedCards() else { return }
             for coun in 0..<3 {
-                cardsToDisplay.remove(at: indexes[coun])
-                cardsToDisplay.insert(self.cards.removeFirst(), at: indexes[coun])
+                tmp = cardsToDisplay.remove(at: indexes[coun])
+                
+                tmp.isSetCorrect.toggle()
+                tmp.isPressed.toggle()
+                discardCards.append(tmp)
+                
+                tmp = self.cards.removeFirst()
+                tmp.isUndealed.toggle()
+                cardsToDisplay.insert(tmp, at: indexes[coun])
             }
             counterOfMatchingSets -= 1
             return
@@ -94,7 +96,9 @@ struct SetGame {
         
         if cardsToDisplay.count < 19 {
             while cardsToDisplay.count != numberOfCards + 3 {
-                cardsToDisplay.append(cards.removeFirst())
+                tmp = cards.removeFirst()
+                tmp.isUndealed.toggle()
+                cardsToDisplay.append(tmp)
             }
         }
     }
@@ -194,11 +198,14 @@ struct SetGame {
     
     private mutating func replaceMatchingSets() {
         guard counterOfMatchingSets == 3 else { return }
+        var tmp: Card
         for card in cardsToDisplay where card.isSetCorrect {
             guard let cardIndex = cardsToDisplay.firstIndex(where: { $0.id == card.id })
             else { return }
-            
-            cardsToDisplay.removeAll(where: { $0.id == card.id })
+            tmp = cardsToDisplay.remove(at: cardIndex)
+            tmp.isSetCorrect.toggle()
+            tmp.isPressed.toggle()
+            discardCards.append(tmp)
             
             guard cards.isEmpty || cardsToDisplay.count > 11 else {
                 cardsToDisplay.insert(cards.removeFirst(), at: cardIndex)

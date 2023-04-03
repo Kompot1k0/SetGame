@@ -11,51 +11,90 @@ struct SetContentView: View {
     
     @ObservedObject var game: Set
     
+    @Namespace private var dealingNamespace
+    @Namespace private var discardingNamespace
+    
     var body: some View {
         VStack {
-            AspectVGrid(items: game.cardsToDisplay, aspectRatio: 2/3) { card in
-                CardView(card: card)
-                    .padding(3)
-                    .transition(AnyTransition.opacity)
-                    .onTapGesture {
-                    game.choose(card)
-                }
-            }
+            gameBody
             HStack {
-                Button(action: game.newGame) {
-                    Text("New Game")
-                        .font(.title)
+                ZStack {
+                    deckBody
+                    Text("+3 card's")
+                        .font(.footnote)
                         .foregroundColor(.blue)
                 }.padding()
                 Spacer()
-                addCards
-                    .font(.title)
-                    .foregroundColor(.blue)
-                .padding()
+                discardDeckBody
+            }
+            newGame
+                .font(.title2)
+                .foregroundColor(.blue)
+        }
+    }
+    
+    var gameBody: some View {
+        AspectVGrid(items: game.cardsToDisplay, aspectRatio: 2/3) { card in
+            CardView(card: card, numberOfCards: game.cardsToDisplay.count)
+                .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                .matchedGeometryEffect(id: card.id, in: discardingNamespace)
+                .padding(3)
+                .onTapGesture {
+                withAnimation {
+                    game.choose(card)
+                }
+            }
+        }.onAppear {
+            for card in game.cards {
+                guard game.cardsToDisplay.count != 12 else { return }
+                withAnimation(dealAnimation(for: card)) {
+                    game.fillArray()
+                }
             }
         }
     }
     
-    var addCards: some View {
-//        withAnimation {
-//            Button(action: game.addThreeCards) {
-//                Text("Add 3 Cards")
-//                    .font(.title)
-//                    .foregroundColor(.blue)
-//            }
-//        }
-        
-        
-            
-        Button("Add 3 Cards") {
+    var deckBody: some View {
+        ZStack {
+            ForEach(game.cards) { card in
+                CardView(card: card, numberOfCards: game.cardsToDisplay.count)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+            }
+        }
+        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
+        .onTapGesture {
             withAnimation {
                 game.addThreeCards()
             }
         }
     }
     
+    var discardDeckBody: some View {
+        ZStack {
+            ForEach(game.discardCards) { card in
+                CardView(card: card, numberOfCards: game.cardsToDisplay.count)
+                    .matchedGeometryEffect(id: card.id, in: discardingNamespace)
+            }
+        }
+        .frame(width: CardConstants.undealtWidth, height: CardConstants.undealtHeight)
+    }
+    
+    var newGame: some View {
+        Button("New Game") {
+            game.newGame()
+            for card in game.cards {
+                guard game.cardsToDisplay.count != 12 else { return }
+                withAnimation(dealAnimation(for: card)) {
+                    game.fillArray()
+                }
+            }
+        }
+        .padding()
+    }
+
     struct CardView: View {
         var card: SetGame.Card
+        var numberOfCards: Int
         var body: some View {
             GeometryReader { proxy in
                 let size = proxy.size
@@ -65,16 +104,40 @@ struct SetContentView: View {
                 VStack {
                     ForEach(0..<number, id: \.self) {_ in
                             shape
+                                .opacity(!card.isUndealed ? 0 : 1)
                                 .foregroundColor(colorOfCard)
-                                .frame(width: size.width * DrawingConstants.frameWidth,
-                                       height: size.height * DrawingConstants.frameHeight)
-                                .rotation3DEffect(Angle.degrees(card.isSetCorrect ? 180 : 0), axis: (0, 1, 0))
-                                    .animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false))
-                    }
-                }.cardify(isPressed: card.isPressed, borderColor: defineBorderColor(card))
+                                .rotation3DEffect(Angle.degrees(card.isSetCorrect ? 180 : 0),
+                                    axis: (1, 0, 0))
+                                .animation(Animation.easeInOut(duration: 1).repeatCount(1),
+                                           value: card.isSetCorrect)
+                                    .frame(width: DrawingConstants.frameWidth,
+                                           height: DrawingConstants.frameHeight)
+                                    .scaleEffect(scale(thatFits: size, in: numberOfCards))
+                    }.padding(.vertical, numberOfCards <= 12 ? 0 :
+                                (numberOfCards <= 18 ? -3 : -5))
+
+                }
+                
+                .cardify(isPressed: card.isPressed,
+                          borderColor: defineBorderColor(card))
             }
         }
     }
+    private func dealAnimation(for card: SetGame.Card) -> Animation {
+        var delay = 0.0
+        if let index = game.cards.firstIndex(where: { $0.id == card.id}) {
+            delay = Double(index) * (CardConstants.totalDealDuration /
+            Double(game.cards.count))
+        }
+        return Animation.easeInOut(duration: CardConstants.dealDuration).delay(delay)
+    }
+}
+
+private func scale(thatFits size: CGSize, in numberOfCards: Int) -> CGFloat {
+    min(size.width, size.height) /
+    (((DrawingConstants.frameWidth +
+       DrawingConstants.frameHeight) / 2) /
+     DrawingConstants.fontSize) / (numberOfCards <= 18 ? 1 : 1.1)
 }
 
 private func defineNumber(_ card: SetGame.CustomType) -> Int {
@@ -114,9 +177,9 @@ private func defineColor(_ card: SetGame.CustomType) -> Color {
 private func defineShading(_ card: SetGame.CustomType) -> CGFloat {
     switch card {
     case .first:
-        return 0.1
+        return 0.2
     case .second:
-        return 0.4
+        return 0.6
     case .third:
         return 1
     }
@@ -135,8 +198,17 @@ private struct DrawingConstants {
     static let cornerRadiusForCard: CGFloat = 12 
     static let cornerRadiusForShape: CGFloat = 50
     static let lineWidth: CGFloat = 3
-    static let frameWidth: CGFloat = 0.6
-    static let frameHeight: CGFloat = 0.2
+    static let frameWidth: CGFloat = 44
+    static let frameHeight: CGFloat = 22
+    static let fontSize: CGFloat = 0.4
+}
+
+private struct CardConstants {
+    static let aspectRatio: CGFloat = 2/3
+    static let dealDuration: Double = 0.4
+    static let totalDealDuration: Double = 1.8
+    static let undealtHeight: CGFloat = 110
+    static let undealtWidth: CGFloat = undealtHeight * aspectRatio
 }
 
 

@@ -17,12 +17,11 @@ struct Cardify: ViewModifier {
                     cardForm.fill().foregroundColor(.black)
                     cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
                         .foregroundColor(borderColor)
-                content
             } else {
                 cardForm.fill().foregroundColor(.black)
                 cardForm.strokeBorder(lineWidth: DrawingConstants.lineWidth)
-                content
             }
+            content
         }
     }
     
@@ -30,8 +29,6 @@ struct Cardify: ViewModifier {
         static let cornerRadiusForCard: CGFloat = 12
         static let cornerRadiusForShape: CGFloat = 50
         static let lineWidth: CGFloat = 3
-        static let frameWidth: CGFloat = 0.6
-        static let frameHeight: CGFloat = 0.2
     }
 }
 

@@ -20,6 +20,10 @@ class Set: ObservableObject {
         model.cardsToDisplay
     }
     
+    var discardCards: [Card] {
+        model.discardCards
+    }
+    
     func newGame() {
         model = SetGame()
     }
@@ -30,5 +34,9 @@ class Set: ObservableObject {
     
     func addThreeCards() {
         model.addThreeCards()
+    }
+    
+    func fillArray() {
+        model.fillArray()
     }
 }
