@@ -7,18 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8401F57F29BD711D00D53E8D /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8401F57E29BD711D00D53E8D /* AspectVGrid.swift */; };
+		840C83F629B931A40052ADEE /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840C83F529B931A40052ADEE /* Diamond.swift */; };
+		845B6ACF29D1E76C008A9272 /* Cardify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845B6ACE29D1E76C008A9272 /* Cardify.swift */; };
 		848575AE29B6E38200D3B3A3 /* Set_GameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848575AD29B6E38200D3B3A3 /* Set_GameApp.swift */; };
-		848575B029B6E38200D3B3A3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848575AF29B6E38200D3B3A3 /* ContentView.swift */; };
+		848575B029B6E38200D3B3A3 /* SetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848575AF29B6E38200D3B3A3 /* SetContentView.swift */; };
 		848575B229B6E38300D3B3A3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 848575B129B6E38300D3B3A3 /* Assets.xcassets */; };
 		848575B529B6E38300D3B3A3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 848575B429B6E38300D3B3A3 /* Preview Assets.xcassets */; };
+		848575BD29B6E62700D3B3A3 /* SetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848575BC29B6E62700D3B3A3 /* SetModel.swift */; };
+		84B8DB7029B82C81008A7BDB /* SetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B8DB6F29B82C81008A7BDB /* SetViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8401F57E29BD711D00D53E8D /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
+		840C83F529B931A40052ADEE /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
+		845B6ACE29D1E76C008A9272 /* Cardify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cardify.swift; sourceTree = "<group>"; };
 		848575AA29B6E38200D3B3A3 /* Set Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Set Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		848575AD29B6E38200D3B3A3 /* Set_GameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Set_GameApp.swift; sourceTree = "<group>"; };
-		848575AF29B6E38200D3B3A3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		848575AF29B6E38200D3B3A3 /* SetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetContentView.swift; sourceTree = "<group>"; };
 		848575B129B6E38300D3B3A3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		848575B429B6E38300D3B3A3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		848575BC29B6E62700D3B3A3 /* SetModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetModel.swift; sourceTree = "<group>"; };
+		84B8DB6F29B82C81008A7BDB /* SetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +61,13 @@
 		848575AC29B6E38200D3B3A3 /* Set Game */ = {
 			isa = PBXGroup;
 			children = (
+				840C83F529B931A40052ADEE /* Diamond.swift */,
 				848575AD29B6E38200D3B3A3 /* Set_GameApp.swift */,
-				848575AF29B6E38200D3B3A3 /* ContentView.swift */,
+				8401F57E29BD711D00D53E8D /* AspectVGrid.swift */,
+				848575AF29B6E38200D3B3A3 /* SetContentView.swift */,
+				84B8DB6F29B82C81008A7BDB /* SetViewModel.swift */,
+				848575BC29B6E62700D3B3A3 /* SetModel.swift */,
+				845B6ACE29D1E76C008A9272 /* Cardify.swift */,
 				848575B129B6E38300D3B3A3 /* Assets.xcassets */,
 				848575B329B6E38300D3B3A3 /* Preview Content */,
 			);
@@ -74,6 +89,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 848575B829B6E38300D3B3A3 /* Build configuration list for PBXNativeTarget "Set Game" */;
 			buildPhases = (
+				848575BB29B6E56F00D3B3A3 /* ShellScript */,
 				848575A629B6E38200D3B3A3 /* Sources */,
 				848575A729B6E38200D3B3A3 /* Frameworks */,
 				848575A829B6E38200D3B3A3 /* Resources */,
@@ -132,12 +148,37 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		848575BB29B6E56F00D3B3A3 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"error: SwiftLint does not exist, download it from https://github.com/realm/SwiftLint\"\n  exit 1\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		848575A629B6E38200D3B3A3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				848575B029B6E38200D3B3A3 /* ContentView.swift in Sources */,
+				848575B029B6E38200D3B3A3 /* SetContentView.swift in Sources */,
+				845B6ACF29D1E76C008A9272 /* Cardify.swift in Sources */,
+				84B8DB7029B82C81008A7BDB /* SetViewModel.swift in Sources */,
+				8401F57F29BD711D00D53E8D /* AspectVGrid.swift in Sources */,
+				840C83F629B931A40052ADEE /* Diamond.swift in Sources */,
+				848575BD29B6E62700D3B3A3 /* SetModel.swift in Sources */,
 				848575AE29B6E38200D3B3A3 /* Set_GameApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
